@@ -1,3 +1,5 @@
+import com.google.protobuf.ByteString;
+
 public class ProtoRequestGenerator implements IRequestGenerator
 {
 
@@ -34,25 +36,53 @@ public class ProtoRequestGenerator implements IRequestGenerator
 	@Override
 	public byte[] assignBlock(AssignBlockRequest assignBlockRequest) {
 		// TODO Auto-generated method stub
-		return assignBlockRequest.asgnBlockRequest.toByteArray();
+		HDFS.AssignBlockRequest.Builder op = HDFS.AssignBlockRequest.newBuilder();
+		
+		op.setHandle(assignBlockRequest.handle);
+		
+		
+		return op.build().toByteArray();		
 	}
-
 	@Override
 	public byte[] list(ListRequest listRequest) {
 		// TODO Auto-generated method stub
-		return listRequest.listFilesRequest.toByteArray();
+		HDFS.ListFilesRequest.Builder op = HDFS.ListFilesRequest.newBuilder();
+		
+		op.setDirName(listRequest.dirName);
+		
+		
+		return op.build().toByteArray();		
 	}
 
 	@Override
 	public byte[] blockReport(BlockReportRequest blockReportRequest) {
 		// TODO Auto-generated method stub
-		return blockReportRequest.blockReportRequest.toByteArray();
+		HDFS.BlockReportRequest.Builder op = HDFS.BlockReportRequest.newBuilder();
+		
+		op.setId(blockReportRequest.id);
+		
+		HDFS.DataNodeLocation.Builder opdn = HDFS.DataNodeLocation.newBuilder();
+		opdn.setIp(blockReportRequest.location.ip);
+		opdn.setPort(blockReportRequest.location.port);
+		
+		op.setLocation(opdn.build());
+		
+		for(int i:blockReportRequest.blockNumbers){
+			op.addBlockNumbers(i);
+			
+		}
+		
+		return op.build().toByteArray();
 	}
 
 	@Override
 	public byte[] heartBeat(HeartBeatRequest heartBeatRequest) {
 		// TODO Auto-generated method stub
-		return heartBeatRequest.hrtBeatRequest.toByteArray();
+		HDFS.HeartBeatRequest.Builder op = HDFS.HeartBeatRequest.newBuilder();
+		
+		op.setId(heartBeatRequest.id);
+				
+		return op.build().toByteArray();
 	}
 
 	@Override
@@ -66,7 +96,24 @@ public class ProtoRequestGenerator implements IRequestGenerator
 	@Override
 	public byte[] writeBlock(WriteBlockRequest writeBlockRequest) {
 		// TODO Auto-generated method stub
-		return writeBlockRequest.wrBlockRequest.toByteArray();
+		HDFS.WriteBlockRequest.Builder op = HDFS.WriteBlockRequest.newBuilder();
+		
+		op.addData(ByteString.copyFrom(writeBlockRequest.data));
+		
+		HDFS.BlockLocations.Builder opbl = HDFS.BlockLocations.newBuilder();
+		
+		for(DataNodeLocation temp: writeBlockRequest.blockLocation.locations){
+			HDFS.DataNodeLocation.Builder opdn = HDFS.DataNodeLocation.newBuilder();
+			opdn.setIp(temp.ip);
+			opdn.setPort(temp.port);
+			
+			opbl.addLocations(opdn.build());
+			
+		}
+			opbl.setBlockNumber(writeBlockRequest.blockLocation.blockNumber);
+			op.setBlockInfo(opbl.build());
+		
+		return op.build().toByteArray();
 	}
 
 	

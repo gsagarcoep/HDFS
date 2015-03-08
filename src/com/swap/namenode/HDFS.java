@@ -3924,15 +3924,20 @@ public final class HDFS {
   public interface DataNodeLocationOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional int32 ip = 1;
+    // optional string ip = 1;
     /**
-     * <code>optional int32 ip = 1;</code>
+     * <code>optional string ip = 1;</code>
      */
     boolean hasIp();
     /**
-     * <code>optional int32 ip = 1;</code>
+     * <code>optional string ip = 1;</code>
      */
-    int getIp();
+    java.lang.String getIp();
+    /**
+     * <code>optional string ip = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getIpBytes();
 
     // optional int32 port = 2;
     /**
@@ -3995,9 +4000,9 @@ public final class HDFS {
               }
               break;
             }
-            case 8: {
+            case 10: {
               bitField0_ |= 0x00000001;
-              ip_ = input.readInt32();
+              ip_ = input.readBytes();
               break;
             }
             case 16: {
@@ -4045,20 +4050,47 @@ public final class HDFS {
     }
 
     private int bitField0_;
-    // optional int32 ip = 1;
+    // optional string ip = 1;
     public static final int IP_FIELD_NUMBER = 1;
-    private int ip_;
+    private java.lang.Object ip_;
     /**
-     * <code>optional int32 ip = 1;</code>
+     * <code>optional string ip = 1;</code>
      */
     public boolean hasIp() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional int32 ip = 1;</code>
+     * <code>optional string ip = 1;</code>
      */
-    public int getIp() {
-      return ip_;
+    public java.lang.String getIp() {
+      java.lang.Object ref = ip_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          ip_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string ip = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIpBytes() {
+      java.lang.Object ref = ip_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        ip_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     // optional int32 port = 2;
@@ -4078,7 +4110,7 @@ public final class HDFS {
     }
 
     private void initFields() {
-      ip_ = 0;
+      ip_ = "";
       port_ = 0;
     }
     private byte memoizedIsInitialized = -1;
@@ -4094,7 +4126,7 @@ public final class HDFS {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt32(1, ip_);
+        output.writeBytes(1, getIpBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeInt32(2, port_);
@@ -4110,7 +4142,7 @@ public final class HDFS {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, ip_);
+          .computeBytesSize(1, getIpBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
@@ -4232,7 +4264,7 @@ public final class HDFS {
 
       public Builder clear() {
         super.clear();
-        ip_ = 0;
+        ip_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         port_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -4289,7 +4321,9 @@ public final class HDFS {
       public Builder mergeFrom(HDFS.DataNodeLocation other) {
         if (other == HDFS.DataNodeLocation.getDefaultInstance()) return this;
         if (other.hasIp()) {
-          setIp(other.getIp());
+          bitField0_ |= 0x00000001;
+          ip_ = other.ip_;
+          onChanged();
         }
         if (other.hasPort()) {
           setPort(other.getPort());
@@ -4321,35 +4355,76 @@ public final class HDFS {
       }
       private int bitField0_;
 
-      // optional int32 ip = 1;
-      private int ip_ ;
+      // optional string ip = 1;
+      private java.lang.Object ip_ = "";
       /**
-       * <code>optional int32 ip = 1;</code>
+       * <code>optional string ip = 1;</code>
        */
       public boolean hasIp() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional int32 ip = 1;</code>
+       * <code>optional string ip = 1;</code>
        */
-      public int getIp() {
-        return ip_;
+      public java.lang.String getIp() {
+        java.lang.Object ref = ip_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          ip_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>optional int32 ip = 1;</code>
+       * <code>optional string ip = 1;</code>
        */
-      public Builder setIp(int value) {
-        bitField0_ |= 0x00000001;
+      public com.google.protobuf.ByteString
+          getIpBytes() {
+        java.lang.Object ref = ip_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          ip_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string ip = 1;</code>
+       */
+      public Builder setIp(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         ip_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 ip = 1;</code>
+       * <code>optional string ip = 1;</code>
        */
       public Builder clearIp() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        ip_ = 0;
+        ip_ = getDefaultInstance().getIp();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string ip = 1;</code>
+       */
+      public Builder setIpBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        ip_ = value;
         onChanged();
         return this;
       }
@@ -10942,7 +11017,7 @@ public final class HDFS {
       " \003(\014\"$\n\022WriteBlockResponse\022\016\n\006status\030\001 \001" +
       "(\005\"\"\n\020CloseFileRequest\022\016\n\006handle\030\001 \001(\005\"#" +
       "\n\021CloseFileResponse\022\016\n\006status\030\001 \001(\005\",\n\020D",
-      "ataNodeLocation\022\n\n\002ip\030\001 \001(\005\022\014\n\004port\030\002 \001(" +
+      "ataNodeLocation\022\n\n\002ip\030\001 \001(\t\022\014\n\004port\030\002 \001(" +
       "\005\"K\n\016BlockLocations\022\023\n\013blockNumber\030\001 \001(\005" +
       "\022$\n\tlocations\030\002 \003(\0132\021.DataNodeLocation\")" +
       "\n\024BlockLocationRequest\022\021\n\tblockNums\030\001 \003(" +

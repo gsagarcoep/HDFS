@@ -1,6 +1,7 @@
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -37,7 +38,23 @@ public class ProtoRequestParser implements IRequestParser{
 		
 		InputStream in = new ByteArrayInputStream(writeBlockRequest);
 		try {
-			currentWriteBlockRequest.wrBlockRequest = HDFS.WriteBlockRequest.parseFrom(in);
+			HDFS.WriteBlockRequest temp = HDFS.WriteBlockRequest.parseFrom(in);
+			
+			currentWriteBlockRequest.blockLocation.blockNumber = temp.getBlockInfo().getBlockNumber();
+			
+			List<HDFS.DataNodeLocation> arr = temp.getBlockInfo().getLocationsList();
+			
+			for(HDFS.DataNodeLocation here: arr){
+				
+				DataNodeLocation cur = new DataNodeLocation();
+				cur.ip = here.getIp();
+				cur.port = here.getPort();
+				currentWriteBlockRequest.blockLocation.locations.add(cur);
+			}
+			//Only first element in the bytestring list will be filled.
+			currentWriteBlockRequest.data = temp.getData(0).toByteArray();
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -108,7 +125,9 @@ public class ProtoRequestParser implements IRequestParser{
 		
 		InputStream in = new ByteArrayInputStream(assignBlockRequest);
 		try {
-			curr.asgnBlockRequest = HDFS.AssignBlockRequest.parseFrom(in);
+			HDFS.AssignBlockRequest temp = HDFS.AssignBlockRequest.parseFrom(in);
+			curr.handle = temp.getHandle();
+		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,7 +143,8 @@ public class ProtoRequestParser implements IRequestParser{
 		
 		InputStream in = new ByteArrayInputStream(listRequest);
 		try {
-			curr.listFilesRequest = HDFS.ListFilesRequest.parseFrom(in);
+		
+			curr.dirName = HDFS.ListFilesRequest.parseFrom(in).getDirName();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -140,7 +160,15 @@ public class ProtoRequestParser implements IRequestParser{
 		
 		InputStream in = new ByteArrayInputStream(blockReportRequest);
 		try {
-			curr.blockReportRequest = HDFS.BlockReportRequest.parseFrom(in);
+			HDFS.BlockReportRequest temp = HDFS.BlockReportRequest.parseFrom(in);
+			curr.blockNumbers = temp.getBlockNumbersList();
+			curr.id = temp.getId();
+			
+			DataNodeLocation dnl = new DataNodeLocation();
+			dnl.ip = temp.getLocation().getIp();
+			dnl.port = temp.getLocation().getPort();
+			curr.location = dnl;
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -156,7 +184,7 @@ public class ProtoRequestParser implements IRequestParser{
 		
 		InputStream in = new ByteArrayInputStream(heartBeatRequest);
 		try {
-			curr.hrtBeatRequest = HDFS.HeartBeatRequest.parseFrom(in);
+			curr.id = HDFS.HeartBeatRequest.parseFrom(in).getId();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

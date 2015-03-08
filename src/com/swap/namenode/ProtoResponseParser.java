@@ -89,7 +89,19 @@ public class ProtoResponseParser implements IResponseParser {
 		InputStream in = new ByteArrayInputStream(assignBlockResponse);
 		try {
 			HDFS.AssignBlockResponse input = HDFS.AssignBlockResponse.parseFrom(in);
-			curr.asgnBlockRequest = input;
+			curr.status = input.getStatus();
+			HDFS.BlockLocations temp = input.getNewBlock();
+			
+			List<HDFS.DataNodeLocation> arr = temp.getLocationsList();
+			
+			for(HDFS.DataNodeLocation here: arr){
+				
+				DataNodeLocation cur = new DataNodeLocation();
+				cur.ip = here.getIp();
+				cur.port = here.getPort();
+				curr.blockLocations.locations.add(cur);
+			}
+		
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -107,7 +119,13 @@ public class ProtoResponseParser implements IResponseParser {
 		InputStream in = new ByteArrayInputStream(listResponse);
 		try {
 			HDFS.ListFilesResponse input = HDFS.ListFilesResponse.parseFrom(in);
-			curr.listFilesResponse = input;
+			curr.status = input.getStatus();
+			List<String > arr = input.getFileNamesList();
+			
+			for(String name:arr){
+				curr.fileNames.add(name);
+			}
+			
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -125,7 +143,7 @@ public class ProtoResponseParser implements IResponseParser {
 		InputStream in = new ByteArrayInputStream(blockReportResponse);
 		try {
 			HDFS.BlockReportResponse input = HDFS.BlockReportResponse.parseFrom(in);
-			curr.blockReportResponse = input;
+			curr.status = input.getStatusList();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -143,7 +161,7 @@ public class ProtoResponseParser implements IResponseParser {
 		InputStream in = new ByteArrayInputStream(heartBeatResponse);
 		try {
 			HDFS.HeartBeatResponse input = HDFS.HeartBeatResponse.parseFrom(in);
-			curr.hrtBeatResponse = input;
+			curr.status = input.getStatus();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -161,7 +179,8 @@ public class ProtoResponseParser implements IResponseParser {
 		InputStream in = new ByteArrayInputStream(readBlockResponse);
 		try {
 			HDFS.ReadBlockResponse input = HDFS.ReadBlockResponse.parseFrom(in);
-			curr.rdBlockResponse = input;
+			curr.status = input.getStatus();
+			curr.data = input.getData(0).toByteArray();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -179,7 +198,7 @@ public class ProtoResponseParser implements IResponseParser {
 		InputStream in = new ByteArrayInputStream(writeBlockResponse);
 		try {
 			HDFS.WriteBlockResponse input = HDFS.WriteBlockResponse.parseFrom(in);
-			curr.wrBlockResponce = input;
+			curr.status = input.getStatus();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

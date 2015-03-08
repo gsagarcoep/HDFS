@@ -62,38 +62,81 @@ public class ProtoResponseGenerator implements IResponseGenerator {
 	public byte[] assignBlock(AssignBlockResponse assignBlockRequest) {
 		// TODO Auto-generated method stub
 				
-		return assignBlockRequest.asgnBlockRequest.toByteArray();
+		HDFS.AssignBlockResponse.Builder op = HDFS.AssignBlockResponse.newBuilder();
+		op.setStatus(assignBlockRequest.status);
+
+		HDFS.BlockLocations.Builder ab = HDFS.BlockLocations.newBuilder();
+		ab.setBlockNumber(assignBlockRequest.blockLocations.blockNumber);
+		
+		for(DataNodeLocation dnl: assignBlockRequest.blockLocations.locations){
+			HDFS.DataNodeLocation.Builder cd = HDFS.DataNodeLocation.newBuilder();
+			cd.setIp(dnl.ip);
+			cd.setPort(dnl.port);
+			cd.build();
+			ab.addLocations(cd);
+		}
+		ab.build();
+		op.setNewBlock(ab);
+		
+		return op.build().toByteArray();
 	}
 
 	@Override
 	public byte[] list(ListResponse listRequest) {
 		// TODO Auto-generated method stub
 		
-		return listRequest.listFilesResponse.toByteArray();
+		HDFS.ListFilesResponse.Builder ab = HDFS.ListFilesResponse.newBuilder();
+		ab.setStatus(listRequest.status);
+		
+		for(String dnl: listRequest.fileNames){
+			ab.addFileNames(dnl);
+		}
+		return ab.build().toByteArray();
+		
 	}
 
 	@Override
 	public byte[] blockReport(BlockReportResponse blockReportRequest) {
 		// TODO Auto-generated method stub
-		return blockReportRequest.blockReportResponse.toByteArray();
+
+		HDFS.BlockReportResponse.Builder ab = HDFS.BlockReportResponse.newBuilder();
+		
+		for(int dnl: blockReportRequest.status){
+			ab.addStatus(dnl);
+		}
+		return ab.build().toByteArray();
 	}
 
 	@Override
 	public byte[] heartBeat(HeartBeatResponse heartBeatRequest) {
 		// TODO Auto-generated method stub
-		return heartBeatRequest.hrtBeatResponse.toByteArray();
+
+		HDFS.HeartBeatResponse.Builder ab = HDFS.HeartBeatResponse.newBuilder();
+		
+		ab.setStatus(heartBeatRequest.status);
+		return ab.build().toByteArray();
+
 	}
 
 	@Override
 	public byte[] readBlock(ReadBlockResponse readBlockRequest) {
 		// TODO Auto-generated method stub
-		return readBlockRequest.rdBlockResponse.toByteArray();
+
+		HDFS.ReadBlockResponse.Builder ab = HDFS.ReadBlockResponse.newBuilder();
+		
+		ab.setStatus(readBlockRequest.status);
+		return ab.build().toByteArray();
+
 	}
 
 	@Override
 	public byte[] writeBlock(WriteBlockResponse writeBlockRequest) {
 		// TODO Auto-generated method stub
-		return writeBlockRequest.wrBlockResponce.toByteArray();
+		HDFS.WriteBlockResponse.Builder ab = HDFS.WriteBlockResponse.newBuilder();
+		
+		ab.setStatus(writeBlockRequest.status);
+		return ab.build().toByteArray();
+
 	}
 
 }

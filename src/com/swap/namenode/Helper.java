@@ -1,4 +1,3 @@
-
 import java.util.List;
 
 public class Helper {
@@ -7,7 +6,8 @@ public class Helper {
 
 class DataNodeLocation
 {
-	int ip, port;
+	String ip;
+	int port;
 }
 
 enum mode
@@ -24,29 +24,32 @@ class OpenFileRequest
 
 class CloseFileRequest
 {
+	int handle;
 	HDFS.CloseFileRequest closeFileRequest;
 }
 
 
 class AssignBlockRequest
 {
-	HDFS.AssignBlockRequest asgnBlockRequest;
+	int handle;
 }
 
 
 class ListRequest
 {
-	HDFS.ListFilesRequest listFilesRequest;
+	String dirName;
 }
 
 class BlockReportRequest
 {
-	HDFS.BlockReportRequest blockReportRequest;
+	int id;
+	DataNodeLocation location;
+	List<Integer> blockNumbers;
 }
 
 class HeartBeatRequest
 {
-	HDFS.HeartBeatRequest hrtBeatRequest;
+	int id;
 }
 
 class ReadBlockRequest
@@ -56,7 +59,8 @@ class ReadBlockRequest
 
 class WriteBlockRequest
 {
-	HDFS.WriteBlockRequest wrBlockRequest;
+	BlockLocations blockLocation;
+	byte[] data;
 }
 
 class OpenFileResponse
@@ -90,31 +94,59 @@ class BlockLocationResponse
 
 class AssignBlockResponse
 {
-	HDFS.AssignBlockResponse asgnBlockRequest;
+	int status;
+	BlockLocations blockLocations;
 }
 
 
 class ListResponse
 {
-	HDFS.ListFilesResponse listFilesResponse;
+	int status;
+	List<String> fileNames;
 }
 
 class BlockReportResponse
 {
-	HDFS.BlockReportResponse blockReportResponse;
+	List<Integer> status;
 }
 
 class HeartBeatResponse
 {
-	HDFS.HeartBeatResponse hrtBeatResponse;
+	int status;
 }
 
 class WriteBlockResponse
 {
-	HDFS.WriteBlockResponse wrBlockResponce;
+	int status;
 }
 
 class ReadBlockResponse
 {
-	HDFS.ReadBlockResponse rdBlockResponse;
+	int status;
+	byte [] data;
+}
+
+class OpenFileDetails
+{
+	String name;
+	int refCount;
+	
+	public OpenFileDetails(String name, int refCount)
+	{
+		this.name = name;
+		this.refCount = refCount;
+	}
+}
+
+class HeartBeatRunnable implements Runnable
+{
+    private DataNode dataNode;
+    public HeartBeatRunnable(DataNode dn)
+    {
+        this.dataNode = dn;
+    }
+    public void run()
+    {
+    	dataNode.sendHeartBeat();
+    }
 }
